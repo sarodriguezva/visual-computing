@@ -15,6 +15,11 @@ let conf3 = {
   "F":"F[+F]F[-F]F[--F]F[---F]"
 };
 
+let conf4 = {
+  "F": "FF+[+FF+F-XF]-[-FF-F+XF]",
+  "X": "F[+X][-X]F"
+};
+
 let rules = conf1;
 
 function setup() {
@@ -30,6 +35,9 @@ function setup() {
   
   let config3Button = createButton('Configuración 3');
   config3Button.mousePressed(() => changeConfig(3));
+
+  let config4Button = createButton('Configuración 4 - Different Variables');
+  config4Button.mousePressed(() => changeConfig(4));
   
   let resetButton = createButton('Borrar');
   resetButton.mousePressed(resetCanvas);
@@ -39,6 +47,7 @@ function changeConfig(conf){
   if(conf == 1){rules = conf1; generate();}
   else if(conf == 2){rules = conf2; generate();}
   else if(conf == 3){rules = conf3; generate();}
+  else if(conf == 4){rules = conf4; generate();}
 }
 
 function generate() {
@@ -86,6 +95,16 @@ function draw() {
     } else if (current == "[") {
       push();
     } else if (current == "]") {
+      pop();
+    } else if (current == "X") {
+      push();
+      translate(0, -len);
+      fill(255, 192, 203);
+      noStroke();
+      for (let j = 0; j < 6; j++) {
+        ellipse(0, 0, 10, 30);
+        rotate(PI / 4);
+      }
       pop();
     }
   }
