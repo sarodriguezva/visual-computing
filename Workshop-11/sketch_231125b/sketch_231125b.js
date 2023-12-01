@@ -56,11 +56,59 @@ function draw() {
   // Swap grids
   [grid, nextGrid] = [nextGrid, grid];
 
-  // Display 3D object with texture
-  rotateX(frameCount * 0.01);
+  let img = createTexture(cols, rows);
+
+  // Apply texture to shapes
+  texture(img);
   rotateY(frameCount * 0.01);
-  texture(createTexture());
-  box(200);
+
+  //Train
+  push();
+  translate(0, 0);
+  box(100, 100, 200);
+  translate(0, -85, -50);
+  box(100, 70, 100);
+  translate(0, -50, 0);
+  box(120, 20, 120);
+  pop();
+  
+  //Wheels
+  for (let i = 0; i < 3; i++) {
+    for (let j = -1; j < 3; j += 2) {
+      push();
+      translate(j * 50, 50, i * 70 - 70);
+      rotateZ(HALF_PI);
+      cylinder(30, 20);
+      pop();
+    }
+  }
+  
+  //Funnel
+  push();
+  translate(0, -60, 70);
+  cylinder(20, 50);
+  translate(0, -30, 0);
+  cylinder(30, 30);
+  pop();
+  
+  //Rail cars
+  for (let i = 1; i < 4; i++) {
+    push();
+    translate(0, 0, -i * 200);
+    box(100, 100, 200);
+    pop();
+  
+    //Rail cars' wheels
+    for (let j = 0; j < 2; j++) {
+      for (let k = -1; k < 2; k += 2) {
+        push();
+        translate(k * 50, 50, -i * 200 + j * 100 - 50);
+        rotateZ(HALF_PI);
+        cylinder(30, 20);
+        pop();
+      }
+    }
+  }  
 }
 
 function laplaceAValue(x, y) {
