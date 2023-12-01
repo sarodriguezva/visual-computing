@@ -14,15 +14,13 @@ function setup() {
     }
   }
   
-  // Hint: camera.eyeX, camera.eyeY, camera.eyeZ
   testComparator = (a, b) => {
-  // Calcula la distancia de a y b a la posición de la cámara
-  const distA = dist(a.p1.x, a.p1.y, a.p1.z, camera.eyeX, camera.eyeY, camera.eyeZ);
-  const distB = dist(b.p1.x, b.p1.y, b.p1.z, camera.eyeX, camera.eyeY, camera.eyeZ);
-  
-  // Compara las distancias, muestra primero las figuras más cercanas
-  return distB - distA;
+    let camPos = createVector(camera.eyeX, camera.eyeY, camera.eyeZ);
+    let distA = a.averageDistance(camPos);
+    let distB = b.averageDistance(camPos);
+    return distB - distA; // Orden descendente
   };
+
 
   noStroke();
 }
@@ -32,7 +30,11 @@ function draw() {
   orbitControl();
   
   shapes.sort(testComparator);
-  shapes.forEach(s => s.show());
+  shapes.forEach(s => {
+    if (s.normal().z < 0) { // Comprobar si la cara está orientada hacia la cámara
+      s.show();
+    }
+  });
 }
 
 function keyPressed() {
@@ -76,5 +78,17 @@ class PyramidFace {
     vertex(this.p2.x, this.p2.y, this.p2.z);
     vertex(this.p3.x, this.p3.y, this.p3.z);
     endShape(CLOSE);
+  }
+  
+  averageDistance(cameraPos) {
+    let avgX = (this.p1.x + this.p2.x + this.p3.x) / 3;
+    let avgY = (this.p1.y + this.p2.y + this.p3.y) / 3;
+    let avgZ = (this.p1.z + this.p2.z + this.p3.z) / 3;
+    return dist(avgX, avgY, avgZ, cameraPos.x, cameraPos.y, cameraPos.z);
+  }
+  normal() {
+    let u = p5.Vector.sub(this.p2, this.p1);
+    let v = p5.Vector.sub(this.p3, this.p1);
+    return u.cross(v);
   }
 }
